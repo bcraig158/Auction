@@ -55,7 +55,10 @@ function saveBid(event) {
         updateHighestBid(newBid);
         updateBiddingHistory();
 
-        // Send a message to the parent to scroll to the bidding history section
+        // Clear the form fields
+        document.getElementById("bid-form").reset();
+
+        // Scroll to the bidding history section
         window.parent.postMessage({ type: "scrollToHistory" }, "*");
     })
     .catch(error => {
@@ -74,7 +77,8 @@ function updateHighestBid(newBid) {
         document.getElementById("bid").value = highestBid + 1000;
         document.getElementById("bid").min = highestBid + 1000;
 
-        window.parent.postMessage({ type: "updateBids", bids: JSON.parse(localStorage.getItem('bids')) }, "*");
+        // Update the bidding history without refreshing the page
+        updateBiddingHistory();
     }
 }
 
@@ -189,4 +193,5 @@ window.addEventListener("message", function(event) {
         document.querySelector('.bidding-history').scrollIntoView({ behavior: 'smooth' });
     }
 }, false);
+
 
