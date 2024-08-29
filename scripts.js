@@ -53,8 +53,9 @@ function saveBid(event) {
     .then(data => {
         alert("Your bid has been saved successfully!");
         updateHighestBid(newBid);
-        updateBiddingHistory();
-
+        updateBiddingHistory();  // Update the bid history
+    })
+    .then(() => {
         // Clear the form fields
         document.getElementById("bid-form").reset();
 
@@ -77,7 +78,7 @@ function updateHighestBid(newBid) {
         document.getElementById("bid").value = highestBid + 1000;
         document.getElementById("bid").min = highestBid + 1000;
 
-        // Update the bidding history without refreshing the page
+        // Ensure bid history is updated immediately
         updateBiddingHistory();
     }
 }
@@ -193,5 +194,3 @@ window.addEventListener("message", function(event) {
         document.querySelector('.bidding-history').scrollIntoView({ behavior: 'smooth' });
     }
 }, false);
-
-
