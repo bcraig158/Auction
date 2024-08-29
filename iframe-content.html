@@ -104,7 +104,15 @@
                 if (data) {
                     console.log("Bid submission response:", data); // Debugging statement
                     alert(data.message);
-                    updateParentWithBidData(); // Update the parent with the latest bid data
+
+                    // Clear input fields
+                    document.getElementById("bid-form").reset();
+
+                    // Update bid history
+                    updateParentWithBidData();
+
+                    // Scroll to the bid history (optional)
+                    window.parent.postMessage({ type: "scrollToHistory" }, "*");
                 }
             })
             .catch(error => {
@@ -170,3 +178,4 @@
     </script>
 </body>
 </html>
+
