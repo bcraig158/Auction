@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .form-container {
+            border: 3px solid black;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input, button {
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form id="bid-form" onsubmit="submitBid(event)">
+            <label for="name">First & Last Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="bid">Enter Your Bid (USD):</label>
+            <input type="number" id="bid" name="bid" min="11000" step="1000" required>
+
+            <button type="submit">Submit Bid</button>
+        </form>
+    </div>
+
+    <script>
+    function submitBid(event) {
+        event.preventDefault();
+
+        const bidData = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            bid: parseInt(document.getElementById("bid").value)
+        };
+
+        console.log("Submitting bid:", bidData); // Debugging statement
+
+        // Validate bid amount before storing and sending
+        if (bidData.bid < parseInt(document.getElementById("bid").min)) {
+            alert(`Your bid must be at least $${document.getElementById("bid").min}.`);
+            return;
+        }
+
+        // Fetch the current highest bid from the server before submission
+        fetch("https://bid-apisprouter.glitch.me/retrieve-bids")
+            .then(response => response.json())
+            .then(data => {
+                const highestBid = Math.max(...data.map(bid => bid.bid), 0);
+
+                if (bidData.bid <= highestBid) {
+                    alert(`Your bid must be higher than the current highest bid of $${highestBid}.`);
+                    return;
+                }
+
+                // Send the bid data to the API for persistent storage
+                return fetch("https://bid-apisprouter.glitch.me/submit-bid", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(bidData)
+                });
+            })
+            .then(response => {
+                if (response && !response.ok) {
+                    throw new Error(`Error submitting bid: ${response.statusText}`);
+                }
+                return response ? response.json() : null;
+            })
+            .then(data => {
+                if (data) {
+                    console.log("Bid submission response:", data); // Debugging statement
+                    alert(data.message);
+                    updateParentWithBidData(); // Update the parent with the latest bid data
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error); // Log the error to the console
+                alert("There was an error submitting your bid. Please try again later.");
+            });
+    }
+
+    // Listen for messages from the parent window to update the minimum bid
+    window.addEventListener("message", function(event) {
+        const allowedOrigins = ["https://bcraig158.github.io", "https://sprouter.app", "https://spro.me", "https://spro.biz", "https://spro.vip"];
+        
+        if (!allowedOrigins.includes(event.origin)) {
+            console.warn("Origin not allowed: " + event.origin); // Add warning if the origin is not allowed
+            return;
+        }
+
+        if (event.data.type === "updateBids") {
+            // Display the received bid data in the parent page
+            const bids = event.data.bids;
+            displayBids(bids); // Implement a function to display the bids in the parent page
+        }
+
+        if (event.data.type === "iframeLoaded") {
+            // Request bid data from the iframe
+            document.querySelector("iframe").contentWindow.postMessage({ type: "requestBids" }, event.origin);
+        }
+    }, false);
+
+    // Notify the parent window that the iframe has loaded
+    window.addEventListener("load", function() {
+        const allowedOrigins = ["https://sprouter.app", "https://spro.me", "https://spro.biz", "https://spro.vip"];
+        
+        allowedOrigins.forEach(function(origin) {
+            try {
+                window.parent.postMessage({ type: "iframeLoaded" }, origin);
+            } catch (error) {
+                console.error("Failed to communicate with parent:", error); // Handle communication errors
+            }
+        });
+        
+        updateParentWithBidData(); // Send the initial bid data to the parent
+    });
+
+    // Function to send bid data to the parent
+    function updateParentWithBidData() {
+        fetch("https://bid-apisprouter.glitch.me/retrieve-bids")
+        .then(response => response.json())
+        .then(data => {
+            const allowedOrigins = ["https://sprouter.app", "https://spro.me", "https://spro.biz", "https://spro.vip"];
+            allowedOrigins.forEach(function(origin) {
+                try {
+                    window.parent.postMessage({ type: "updateBids", bids: data }, origin);
+                } catch (error) {
+                    console.error("Failed to send bid data to parent:", error); // Handle postMessage errors
+                }
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching bids:", error); // Log any errors encountered while fetching bids
+        });
+    }
+    </script>
+</body>
+</html>
