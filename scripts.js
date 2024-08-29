@@ -57,7 +57,7 @@ function saveBid(event) {
     })
     .then(() => {
         document.getElementById("bid-form").reset();
-        refreshBidHistory();  // Forcefully refresh the bid history
+        window.parent.postMessage({ type: "bidSubmitted" }, "*");
     })
     .catch(error => {
         console.error("Error:", error);
@@ -156,6 +156,16 @@ window.addEventListener("message", function (event) {
     }
 }, false);
 
+// Listener for scrolling to bidding history after bid submission
+window.addEventListener("message", function(event) {
+    if (event.data.type === "scrollToHistory") {
+        document.querySelector('.bidding-history').scrollIntoView({ behavior: 'smooth' });
+    }
+    if (event.data.type === "bidSubmitted") {
+        updateBiddingHistory();
+    }
+}, false);
+
 // Reveal the full bid data only after correct PIN is entered
 function revealData() {
     const pin = document.getElementById("admin-pin").value;
@@ -203,10 +213,3 @@ function initializeHighestBid() {
 
 // Initialize the highest bid and bidding history when the page loads
 initializeHighestBid();
-
-// Listener for scrolling to bidding history after bid submission
-window.addEventListener("message", function(event) {
-    if (event.data.type === "scrollToHistory") {
-        document.querySelector('.bidding-history').scrollIntoView({ behavior: 'smooth' });
-    }
-}, false);
