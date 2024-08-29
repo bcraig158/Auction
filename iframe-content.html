@@ -75,7 +75,7 @@
         }
 
         // Fetch the current highest bid from the server before submission
-        fetch("https://bid-apisprouter.glitch.me/retrieve-bids")
+        fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
             .then(response => response.json())
             .then(data => {
                 const highestBid = Math.max(...data.map(bid => bid.bid), 0);
@@ -86,7 +86,7 @@
                 }
 
                 // Send the bid data to the API for persistent storage
-                return fetch("https://bid-apisprouter.glitch.me/submit-bid", {
+                return fetch("https://sprouterbidapi.glitch.me/submit-bid", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -151,7 +151,7 @@
 
     // Function to send bid data to the parent
     function updateParentWithBidData() {
-        fetch("https://bid-apisprouter.glitch.me/retrieve-bids")
+        fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
         .then(response => response.json())
         .then(data => {
             const allowedOrigins = ["https://sprouter.app", "https://spro.me", "https://spro.biz", "https://spro.vip"];
