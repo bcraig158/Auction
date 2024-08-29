@@ -83,7 +83,7 @@ function updateIframeBidMin(newMinBid) {
 
 // Function to update the bidding history display
 function updateBiddingHistory() {
-    fetch("https://bid-apisprouter.glitch.me/retrieve-bids")
+    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
     .then(response => response.json())
     .then(bids => {
         let content = "Bids:\n\n";
@@ -103,7 +103,7 @@ function updateBiddingHistory() {
 
 // Call updateBiddingHistory after ensuring DOM is fully loaded
 window.addEventListener('load', function () {
-    fetch("https://bid-apisprouter.glitch.me/retrieve-bids")
+    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
         .then(response => response.json())
         .then(data => {
             const highestBidFromServer = Math.max(...data.map(bid => bid.bid), 0);
@@ -142,7 +142,7 @@ function revealData() {
         return;
     }
 
-    fetch("https://bid-apisprouter.glitch.me/retrieve-bids")
+    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
     .then(response => response.json())
     .then(bids => {
         let content = "Bids:\n\n";
@@ -162,7 +162,7 @@ function revealData() {
 
 // Initialize the current highest bid from existing data
 function initializeHighestBid() {
-    fetch("https://bid-apisprouter.glitch.me/retrieve-bids")
+    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
     .then(response => response.json())
     .then(bids => {
         if (bids.length > 0) {
