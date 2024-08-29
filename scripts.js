@@ -53,14 +53,11 @@ function saveBid(event) {
     .then(data => {
         alert("Your bid has been saved successfully!");
         updateHighestBid(newBid);
-        updateBiddingHistory();  // Update the bid history
+        updateBiddingHistory();
     })
     .then(() => {
-        // Clear the form fields
         document.getElementById("bid-form").reset();
-
-        // Scroll to the bidding history section
-        window.parent.postMessage({ type: "scrollToHistory" }, "*");
+        refreshBidHistory();  // Forcefully refresh the bid history
     })
     .catch(error => {
         console.error("Error:", error);
@@ -78,7 +75,6 @@ function updateHighestBid(newBid) {
         document.getElementById("bid").value = highestBid + 1000;
         document.getElementById("bid").min = highestBid + 1000;
 
-        // Ensure bid history is updated immediately
         updateBiddingHistory();
     }
 }
@@ -106,6 +102,26 @@ function updateBiddingHistory() {
     })
     .catch(error => {
         console.error("Error fetching bids:", error);
+    });
+}
+
+// Function to forcefully refresh the bid history after bid submission
+function refreshBidHistory() {
+    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
+    .then(response => response.json())
+    .then(bids => {
+        let content = "Bids:\n\n";
+        bids.forEach(bid => {
+            content += `Bid: $${bid.bid}\n`;
+            content += `Time: ${bid.timestamp}\n\n`;
+        });
+
+        if (document.getElementById("bids-text")) {
+            document.getElementById("bids-text").innerText = content;
+        }
+    })
+    .catch(error => {
+        console.error("Error refreshing bids:", error);
     });
 }
 
