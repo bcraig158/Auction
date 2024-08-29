@@ -67,16 +67,12 @@ function saveBid(event) {
 
 // Function to update the highest bid and notify the iframe
 function updateHighestBid(newBid) {
-    if (newBid > highestBid) {
-        highestBid = newBid;
-        document.getElementById("current-bid").innerText = highestBid;
-        updateIframeBidMin(highestBid + 1000);
+    highestBid = newBid;
+    document.getElementById("current-bid").innerText = highestBid;
+    updateIframeBidMin(highestBid + 1000);
 
-        document.getElementById("bid").value = highestBid + 1000;
-        document.getElementById("bid").min = highestBid + 1000;
-
-        updateBiddingHistory();
-    }
+    document.getElementById("bid").value = highestBid + 1000;
+    document.getElementById("bid").min = highestBid + 1000;
 }
 
 // Function to update the iframe's minimum bid amount
@@ -91,10 +87,16 @@ function updateBiddingHistory() {
     .then(response => response.json())
     .then(bids => {
         let content = "Bids:\n\n";
+        let highestBidFromServer = 0;
+
         bids.forEach(bid => {
             content += `Bid: $${bid.bid}\n`;
             content += `Time: ${bid.timestamp}\n\n`;
+            highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
         });
+
+        // Update the highest bid on the page
+        updateHighestBid(highestBidFromServer);
 
         if (document.getElementById("bids-text")) {
             document.getElementById("bids-text").innerText = content;
@@ -213,3 +215,4 @@ function initializeHighestBid() {
 
 // Initialize the highest bid and bidding history when the page loads
 initializeHighestBid();
+
