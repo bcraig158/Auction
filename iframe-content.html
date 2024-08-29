@@ -95,25 +95,23 @@
                 });
             })
             .then(response => {
-                if (response && !response.ok) {
+                if (!response.ok) {
                     throw new Error(`Error submitting bid: ${response.statusText}`);
                 }
-                return response ? response.json() : null;
+                return response.json();
             })
             .then(data => {
-                if (data) {
-                    console.log("Bid submission response:", data); // Debugging statement
-                    alert(data.message);
+                console.log("Bid submission response:", data); // Debugging statement
+                alert(data.message);
 
-                    // Clear input fields
-                    document.getElementById("bid-form").reset();
+                // Clear input fields
+                document.getElementById("bid-form").reset();
 
-                    // Update bid history
-                    updateParentWithBidData();
+                // Notify the parent window
+                window.parent.postMessage({ type: "bidSubmitted" }, "*");
 
-                    // Scroll to the bid history (optional)
-                    window.parent.postMessage({ type: "scrollToHistory" }, "*");
-                }
+                // Scroll to the bid history (optional)
+                window.parent.postMessage({ type: "scrollToHistory" }, "*");
             })
             .catch(error => {
                 console.error("Error:", error); // Log the error to the console
@@ -178,4 +176,5 @@
     </script>
 </body>
 </html>
+
 
