@@ -54,6 +54,9 @@ function saveBid(event) {
         alert("Your bid has been saved successfully!");
         updateHighestBid(newBid);
         updateBiddingHistory();
+
+        // Send a message to the parent to scroll to the bidding history section
+        window.parent.postMessage({ type: "scrollToHistory" }, "*");
     })
     .catch(error => {
         console.error("Error:", error);
@@ -179,3 +182,11 @@ function initializeHighestBid() {
 
 // Initialize the highest bid and bidding history when the page loads
 initializeHighestBid();
+
+// Listener for scrolling to bidding history after bid submission
+window.addEventListener("message", function(event) {
+    if (event.data.type === "scrollToHistory") {
+        document.querySelector('.bidding-history').scrollIntoView({ behavior: 'smooth' });
+    }
+}, false);
+
