@@ -37,7 +37,7 @@ function saveBid(event) {
         timestamp: new Date().toLocaleString()
     };
 
-    fetch("https://bid-apisprouter.glitch.me/submit-bid", {
+    fetch("https://sprouterbidapi.glitch.me/submit-bid", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
