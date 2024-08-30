@@ -51,31 +51,34 @@ function saveBid(event) {
     };
 
     fetch("https://sprouterbidapi.glitch.me/submit-bid", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(bidData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Error submitting bid.");
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert("Your bid has been saved successfully!");
-        updateHighestBid(newBid);
-        updateBiddingHistory();
-    })
-    .then(() => {
-        document.getElementById("bid-form").reset();
-        window.parent.postMessage({ type: "bidSubmitted" }, "*");
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("There was an error submitting your bid. Please try again later.");
-    });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(bidData)
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`Error submitting bid: ${response.statusText}`);
+  }
+  return response.json();
+})
+.then(data => {
+  console.log("Bid submission response:", data);
+  return fetch("https://sprouterbidapi.glitch.me/retrieve-bids"); // Fetch the updated bids
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`Failed to fetch updated bids: ${response.statusText}`);
+  }
+  return response.json();
+})
+.then(data => {
+  updateBiddingHistory(data); // Update the bidding history with the new data
+})
+.catch(error => {
+  console.error("Error submitting bid:", error);
+});
 }
 
 // Function to update the highest bid and notify the iframe
@@ -124,14 +127,19 @@ function updateBiddingHistory(bids) {
 // Call updateBiddingHistory after ensuring DOM is fully loaded
 window.addEventListener('load', function () {
     fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch bids: ${response.statusText}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log("Fetched bids:", data); // Log fetched bids for debugging
             const highestBidFromServer = Math.max(...data.map(bid => bid.bid), 0);
             highestBid = highestBidFromServer;
 
             document.getElementById("bid").value = highestBid + 1000;
             document.getElementById("bid").min = highestBid + 1000;
-
             document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
 
             updateBiddingHistory(data);
