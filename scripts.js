@@ -129,7 +129,7 @@ function updateBiddingHistory() {
     });
 }
 // Function to display the bidding history
-function displayBiddingHistory(bids) {
+function updateBiddingHistory(bids) {
     let content = "";
     let highestBidFromServer = 0;
 
