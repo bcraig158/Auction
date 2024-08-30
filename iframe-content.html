@@ -107,7 +107,7 @@
                 // Clear input fields
                 document.getElementById("bid-form").reset();
 
-                // Notify the parent window
+                // Notify the parent window to update the bidding history
                 window.parent.postMessage({ type: "bidSubmitted" }, "*");
 
                 // Scroll to the bid history (optional)
@@ -173,7 +173,7 @@
             console.error("Error fetching bids:", error); // Log any errors encountered while fetching bids
         });
     }
-    </script>
+</script>
 </body>
 </html>
 
