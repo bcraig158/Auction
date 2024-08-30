@@ -140,8 +140,11 @@ window.addEventListener('load', function () {
             document.getElementById("bid").value = highestBid + 1000;
             document.getElementById("bid").min = highestBid + 1000;
 
-            updateHighestBid(highestBid);
-            updateBiddingHistory();
+            // Update the highest bid display
+            document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
+
+            // Update the bidding history
+            updateBiddingHistory(data);
         })
         .catch(error => {
             console.error("Error fetching bids:", error);
@@ -227,3 +230,4 @@ function initializeHighestBid() {
 
 // Initialize the highest bid and bidding history when the page loads
 initializeHighestBid();
+
