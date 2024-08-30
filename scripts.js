@@ -74,6 +74,8 @@ function saveBid(event) {
         return response.json();
     })
     .then(data => {
+        const highestBidFromServer = Math.max(...data.map(bid => bid.bid), 0);
+        updateHighestBid(highestBidFromServer); // Update the highest bid
         updateBiddingHistory(data); // Update the bidding history with the new data
     })
     .catch(error => {
@@ -84,8 +86,8 @@ function saveBid(event) {
 // Function to update the highest bid and notify the iframe
 function updateHighestBid(newBid) {
     highestBid = newBid;
-    document.getElementById("current-bid").innerText = highestBid.toLocaleString();
-    updateIframeBidMin(highestBid + 1000);
+    document.getElementById("current-bid").innerText = highestBid.toLocaleString(); // Update displayed highest bid
+    updateIframeBidMin(highestBid + 1000); // Update minimum bid in iframe
 
     document.getElementById("bid").value = highestBid + 1000;
     document.getElementById("bid").min = highestBid + 1000;
