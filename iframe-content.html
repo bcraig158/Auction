@@ -7,21 +7,16 @@
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
+            margin: 0;
+            box-sizing: border-box;
         }
-        .form-container, .submission-banner {
+        .form-container {
             border: 3px solid black;
             border-radius: 10px;
             padding: 20px;
-            max-width: 400px;
+            max-width: 100%;
+            width: 100%;
             margin: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .form-container {
-            background-color: #f4f4f4;
         }
         form {
             display: flex;
@@ -35,7 +30,9 @@
             margin-bottom: 15px;
             padding: 10px;
             font-size: 16px;
-            width: 100%;
+            width: calc(100% - 24px);
+            margin: 0 auto 15px auto;
+            box-sizing: border-box;
         }
         button {
             cursor: pointer;
@@ -43,32 +40,28 @@
             color: white;
             border: none;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            width: 100%;
         }
-        button:hover {
-            background-color: #45a049;
-        }
-        .submission-banner {
-            background-color: #4CAF50;
-            color: white;
+        .success-banner {
             display: none;
+            background-color: #28a745;
+            color: white;
+            padding: 20px;
             text-align: center;
-            flex-direction: column;
-            padding: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-        }
-        .submission-banner h2 {
             font-size: 24px;
-            margin-bottom: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: auto;
+            max-width: 100%;
+            width: 100%;
         }
-        .submission-banner p {
-            margin-top: 0;
+        .success-banner.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="form-container" id="form-container">
+    <div class="form-container">
         <form id="bid-form" onsubmit="submitBid(event)">
             <label for="name">First & Last Name:</label>
             <input type="text" id="name" name="name" required>
@@ -84,11 +77,7 @@
 
             <button type="submit">Submit Bid</button>
         </form>
-    </div>
-
-    <div class="submission-banner" id="submission-banner" onclick="resetForm()">
-        <h2>Congrats your bid was submitted sucka!</h2>
-        <p>Click here to submit another bid.</p>
+        <div id="success-banner" class="success-banner" onclick="resetForm()">Congrats your bid was submitted sucka! Click here to submit another bid.</div>
     </div>
 
     <script>
@@ -104,6 +93,7 @@
 
         console.log("Submitting bid:", bidData);
 
+        // Validate bid amount before storing and sending
         if (bidData.bid < parseInt(document.getElementById("bid").min)) {
             alert(`Your bid must be at least $${document.getElementById("bid").min}.`);
             return;
@@ -119,6 +109,7 @@
                     return;
                 }
 
+                // Send the bid data to the API for persistent storage
                 return fetch("https://sprouterbidapi.glitch.me/submit-bid", {
                     method: "POST",
                     headers: {
@@ -135,16 +126,16 @@
             })
             .then(data => {
                 console.log("Bid submission response:", data);
-                alert(data.message);
 
-                document.getElementById("bid-form").reset();
+                // Show the success banner and hide the form
+                document.getElementById("bid-form").style.display = "none";
+                document.getElementById("success-banner").classList.add("active");
 
+                // Notify the parent window to update the bidding history
                 window.parent.postMessage({ type: "bidSubmitted" }, "*");
-                window.parent.postMessage({ type: "scrollToHistory" }, "*");
 
-                // Show the submission banner
-                document.getElementById("form-container").style.display = "none";
-                document.getElementById("submission-banner").style.display = "flex";
+                // Scroll to the bid history (optional)
+                window.parent.postMessage({ type: "scrollToHistory" }, "*");
             })
             .catch(error => {
                 console.error("Error:", error);
@@ -153,8 +144,8 @@
     }
 
     function resetForm() {
-        document.getElementById("form-container").style.display = "flex";
-        document.getElementById("submission-banner").style.display = "none";
+        document.getElementById("bid-form").style.display = "flex";
+        document.getElementById("success-banner").classList.remove("active");
     }
 
     window.addEventListener("message", function(event) {
