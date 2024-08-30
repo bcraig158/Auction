@@ -154,6 +154,20 @@ function displayBiddingHistory(bids) {
         document.getElementById("bids-text").innerHTML = content;
     }
 }
+function updateBiddingHistory() {
+    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
+    .then(response => {
+        console.log('Fetch response:', response);
+        return response.json();
+    })
+    .then(bids => {
+        console.log('Bids data:', bids);
+        // existing code...
+    })
+    .catch(error => {
+        console.error("Error fetching bids:", error);
+    });
+}
 
 // Call updateBiddingHistory after ensuring DOM is fully loaded
 window.addEventListener('load', function () {
