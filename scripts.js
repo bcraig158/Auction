@@ -21,6 +21,19 @@ const countdownTimer = setInterval(() => {
     }
 }, 1000);
 
+// Function to format the date
+function formatDate(timestamp) {
+    const date = new Date(timestamp);
+    const options = {
+        month: 'short', 
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+    };
+    return date.toLocaleString('en-US', options);
+}
+
 // Function to save the bid data and update the highest bid
 function saveBid(event) {
     const newBid = parseInt(event.bid);
@@ -34,7 +47,7 @@ function saveBid(event) {
         email: event.email,
         phone: event.phone,
         bid: newBid,
-        timestamp: new Date().toLocaleString()
+        timestamp: new Date().toISOString() // Use ISO format for consistency
     };
 
     fetch("https://sprouterbidapi.glitch.me/submit-bid", {
@@ -68,7 +81,7 @@ function saveBid(event) {
 // Function to update the highest bid and notify the iframe
 function updateHighestBid(newBid) {
     highestBid = newBid;
-    document.getElementById("current-bid").innerText = highestBid;
+    document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
     updateIframeBidMin(highestBid + 1000);
 
     document.getElementById("bid").value = highestBid + 1000;
@@ -86,12 +99,16 @@ function updateBiddingHistory() {
     fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
     .then(response => response.json())
     .then(bids => {
-        let content = "Bids:\n\n";
+        let content = "";
         let highestBidFromServer = 0;
 
         bids.forEach(bid => {
-            content += `Bid: $${bid.bid}\n`;
-            content += `Time: ${bid.timestamp}\n\n`;
+            content += `
+                <div class="bid-entry">
+                    <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
+                    <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
+                </div>
+            `;
             highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
         });
 
@@ -99,31 +116,11 @@ function updateBiddingHistory() {
         updateHighestBid(highestBidFromServer);
 
         if (document.getElementById("bids-text")) {
-            document.getElementById("bids-text").innerText = content;
+            document.getElementById("bids-text").innerHTML = content;
         }
     })
     .catch(error => {
         console.error("Error fetching bids:", error);
-    });
-}
-
-// Function to forcefully refresh the bid history after bid submission
-function refreshBidHistory() {
-    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
-    .then(response => response.json())
-    .then(bids => {
-        let content = "Bids:\n\n";
-        bids.forEach(bid => {
-            content += `Bid: $${bid.bid}\n`;
-            content += `Time: ${bid.timestamp}\n\n`;
-        });
-
-        if (document.getElementById("bids-text")) {
-            document.getElementById("bids-text").innerText = content;
-        }
-    })
-    .catch(error => {
-        console.error("Error refreshing bids:", error);
     });
 }
 
@@ -181,15 +178,25 @@ function revealData() {
     fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
     .then(response => response.json())
     .then(bids => {
-        let content = "Bids:\n\n";
+        let content = "";
         bids.forEach(bid => {
-            content += `Bid: $${bid.bid}\n`;
-            content += `Time: ${new Date(bid.timestamp).toLocaleString()}\n`;
-            content += `Name: ${bid.name}\n`;
-            content += `Email: ${bid.email}\n`;
-            content += `Phone: ${bid.phone}\n\n`;
+            content += `
+                <div class="bid-entry">
+                    <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
+                    <span class="bid-time">Time: ${new Date(bid.timestamp).toLocaleString('en-US', {
+                        month: 'short', 
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true
+                    })}</span>
+                    <div>Name: ${bid.name}</div>
+                    <div>Email: ${bid.email}</div>
+                    <div>Phone: ${bid.phone}</div>
+                </div>
+            `;
         });
-        document.getElementById("bids-text").innerText = content;
+        document.getElementById("bids-text").innerHTML = content;
     })
     .catch(error => {
         console.error("Error fetching bids:", error);
@@ -203,7 +210,7 @@ function initializeHighestBid() {
     .then(bids => {
         if (bids.length > 0) {
             highestBid = Math.max(...bids.map(bid => bid.bid));
-            document.getElementById("current-bid").innerText = highestBid;
+            document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
         }
         updateIframeBidMin(highestBid + 1000);
         updateBiddingHistory();
@@ -215,4 +222,3 @@ function initializeHighestBid() {
 
 // Initialize the highest bid and bidding history when the page loads
 initializeHighestBid();
-
