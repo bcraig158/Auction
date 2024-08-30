@@ -95,38 +95,30 @@ function updateIframeBidMin(newMinBid) {
 }
 
 // Function to update the bidding history display
-function updateBiddingHistory() {
-    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
-    .then(response => response.json())
-    .then(bids => {
-        let content = "";
-        let highestBidFromServer = 0;
+function updateBiddingHistory(bids) {
+    let content = "";
+    let highestBidFromServer = 0;
 
-        if (bids.length === 0) {
-            content = "<p>No bids available</p>";
-        } else {
-            bids.forEach(bid => {
-                content += `
-                    <div class="bid-entry">
-                        <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
-                        <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
-                    </div>
-                `;
-                highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
-            });
+    if (bids.length === 0) {
+        content = "<p>No bids available</p>";
+    } else {
+        bids.forEach(bid => {
+            content += `
+                <div class="bid-entry">
+                    <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
+                    <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
+                </div>
+            `;
+            highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
+        });
 
-            // Update the highest bid on the page
-            updateHighestBid(highestBidFromServer);
-        }
+        // Update the highest bid on the page
+        updateHighestBid(highestBidFromServer);
+    }
 
-        if (document.getElementById("bids-text")) {
-            document.getElementById("bids-text").innerHTML = content;
-        }
-    })
-    .catch(error => {
-        console.error("Error fetching bids:", error);
-        document.getElementById("bids-text").innerHTML = "<p>Error loading bids.</p>";
-    });
+    if (document.getElementById("bids-text")) {
+        document.getElementById("bids-text").innerHTML = content;
+    }
 }
 
 // Call updateBiddingHistory after ensuring DOM is fully loaded
@@ -221,7 +213,7 @@ function initializeHighestBid() {
             document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
         }
         updateIframeBidMin(highestBid + 1000);
-        updateBiddingHistory();
+        updateBiddingHistory(bids);
     })
     .catch(error => {
         console.error("Error initializing highest bid:", error);
@@ -230,4 +222,5 @@ function initializeHighestBid() {
 
 // Initialize the highest bid and bidding history when the page loads
 initializeHighestBid();
+
 
