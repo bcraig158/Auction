@@ -65,20 +65,22 @@ iframe#bid-frame {
     background-color: #f9f9f9;
     border-radius: 10px;
     text-align: center;
+    max-width: 100%; /* Ensure the bidding history section takes up full width */
+    box-sizing: border-box; /* Include padding and border in the element's width and height */
 }
 
 .bidding-history .bid-entry {
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 15px;
-    margin-bottom: 10px;
+    margin: 0 auto 20px; /* Center the bid-entry and give some margin at the bottom */
     background-color: #fff;
-    display: block; /* Use block instead of flex to avoid layout issues */
+    display: block; /* Block-level element to ensure it takes full width */
     text-align: left; /* Left-align text to maintain readability */
-    max-width: 600px;
-    margin: 0 auto; /* Center the bid entry */
+    max-width: 90%; /* Adjust width to be responsive */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-sizing: border-box; /* Include padding and border in the element's width and height */
 }
 
 .bidding-history .bid-entry:hover {
@@ -86,20 +88,16 @@ iframe#bid-frame {
     transform: translateY(-5px);
 }
 
-.bidding-history .bid-entry .bid-amount {
-    font-size: 22px;
+.bidding-history .bid-entry .bid-amount,
+.bidding-history .bid-entry .bid-time {
+    display: block;
+    margin: 5px 0; /* Add some spacing between elements */
+    font-size: 16px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 8px;
-    text-align: center;
+    text-align: center; /* Center the text inside each bid entry */
 }
 
-.bidding-history .bid-entry .bid-time {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 5px;
-    text-align: center;
-}
 
 .bidding-history .bid-entry div {
     font-size: 14px;
