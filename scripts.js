@@ -95,65 +95,52 @@ function updateIframeBidMin(newMinBid) {
 }
 
 // Function to update the bidding history display
-function updateBiddingHistory() {
-    console.log("Fetching bid history..."); // Debugging statement
-    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
+function updateBiddingHistory(bids = null) {
+    if (!bids) {
+        fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
         .then(response => response.json())
-        .then(bids => {
-            console.log("Bids received:", bids); // Debugging statement
-
-            let content = "";
-            let highestBidFromServer = 0;
-
-            if (bids.length === 0) {
-                content = "<p>No bids available</p>";
-            } else {
-                bids.forEach(bid => {
-                    content += `
-                        <div class="bid-entry">
-                            <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
-                            <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
-                        </div>
-                    `;
-                    highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
-                });
-
-                // Update the highest bid on the page
-                updateHighestBid(highestBidFromServer);
-            }
-
-            if (document.getElementById("bids-text")) {
-                document.getElementById("bids-text").innerHTML = content;
-            }
+        .then(data => {
+            displayBiddingHistory(data);
         })
         .catch(error => {
             console.error("Error fetching bids:", error);
             document.getElementById("bids-text").innerHTML = "<p>Error loading bids.</p>";
         });
+    } else {
+        displayBiddingHistory(bids);
+    }
+}
+
+// Function to display the bidding history
+function displayBiddingHistory(bids) {
+    let content = "";
+    let highestBidFromServer = 0;
+
+    if (bids.length === 0) {
+        content = "<p>No bids available</p>";
+    } else {
+        bids.forEach(bid => {
+            content += `
+                <div class="bid-entry">
+                    <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
+                    <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
+                </div>
+            `;
+            highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
+        });
+
+        // Update the highest bid on the page
+        updateHighestBid(highestBidFromServer);
+    }
+
+    if (document.getElementById("bids-text")) {
+        document.getElementById("bids-text").innerHTML = content;
+    }
 }
 
 // Call updateBiddingHistory after ensuring DOM is fully loaded
 window.addEventListener('load', function () {
-    console.log("Page loaded, fetching initial bid history..."); // Debugging statement
-    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
-        .then(response => response.json())
-        .then(data => {
-            console.log("Initial bids data:", data); // Debugging statement
-            const highestBidFromServer = Math.max(...data.map(bid => bid.bid), 0);
-            highestBid = highestBidFromServer;
-
-            document.getElementById("bid").value = highestBid + 1000;
-            document.getElementById("bid").min = highestBid + 1000;
-
-            // Update the highest bid display
-            document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
-
-            // Update the bidding history
-            updateBiddingHistory();
-        })
-        .catch(error => {
-            console.error("Error fetching bids:", error);
-        });
+    updateBiddingHistory();
 });
 
 // Set up the message listener to receive bid data from the iframe
@@ -226,7 +213,7 @@ function initializeHighestBid() {
             document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
         }
         updateIframeBidMin(highestBid + 1000);
-        updateBiddingHistory(bids);
+        updateBiddingHistory();
     })
     .catch(error => {
         console.error("Error initializing highest bid:", error);
@@ -235,5 +222,3 @@ function initializeHighestBid() {
 
 // Initialize the highest bid and bidding history when the page loads
 initializeHighestBid();
-
-
