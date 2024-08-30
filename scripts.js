@@ -124,7 +124,7 @@ window.addEventListener('load', function () {
 
             document.getElementById("bid").value = highestBid + 1000;
             document.getElementById("bid").min = highestBid + 1000;
-            document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
+            document.getElementById("current-bid").innerText = `${highestBid.toLocaleString()}`;
 
             updateBiddingHistory(data);
         })
