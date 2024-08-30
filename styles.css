@@ -70,17 +70,15 @@ iframe#bid-frame {
 .bidding-history .bid-entry {
     border: 1px solid #ccc;
     border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 15px;
+    margin-bottom: 10px;
     background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center each bid entry */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: block; /* Use block instead of flex to avoid layout issues */
+    text-align: left; /* Left-align text to maintain readability */
     max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    margin: 0 auto; /* Center the bid entry */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
 }
 
 .bidding-history .bid-entry:hover {
