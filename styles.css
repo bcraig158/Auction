@@ -79,3 +79,25 @@ button {
 button:hover {
     background-color: #0277BD;
 }
+
+/* Added styles for bid history entries */
+.bid-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.bid-amount {
+    font-weight: bold;
+    color: #333;
+}
+
+.bid-time {
+    color: #666;
+    font-style: italic;
+    font-size: 14px;
+}
