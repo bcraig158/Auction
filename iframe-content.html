@@ -14,6 +14,7 @@
             padding: 20px;
             max-width: 400px;
             margin: auto;
+            position: relative;
         }
         form {
             display: flex;
@@ -34,10 +35,28 @@
             border: none;
             border-radius: 5px;
         }
+        .banner {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 128, 0, 0.9);
+            color: white;
+            text-align: center;
+            padding-top: 60px;
+            font-size: 24px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="form-container">
+        <div class="banner" id="congrats-banner">
+            Congrats your bid was submitted sucka! <br> Click here to submit another bid.
+        </div>
         <form id="bid-form" onsubmit="submitBid(event)">
             <label for="name">First & Last Name:</label>
             <input type="text" id="name" name="name" required>
@@ -102,10 +121,10 @@
             })
             .then(data => {
                 console.log("Bid submission response:", data); // Debugging statement
-                alert(data.message);
 
-                // Clear input fields
-                document.getElementById("bid-form").reset();
+                // Display the congratulatory banner
+                document.getElementById("congrats-banner").style.display = 'block';
+                document.getElementById("bid-form").style.display = 'none';
 
                 // Notify the parent window to update the bidding history
                 window.parent.postMessage({ type: "bidSubmitted" }, "*");
@@ -118,6 +137,12 @@
                 alert("There was an error submitting your bid. Please try again later.");
             });
     }
+
+    // Hide the banner and show the form when the banner is clicked
+    document.getElementById("congrats-banner").addEventListener('click', function() {
+        this.style.display = 'none';
+        document.getElementById("bid-form").style.display = 'block';
+    });
 
     // Listen for messages from the parent window to update the minimum bid
     window.addEventListener("message", function(event) {
@@ -173,7 +198,7 @@
             console.error("Error fetching bids:", error); // Log any errors encountered while fetching bids
         });
     }
-</script>
+    </script>
 </body>
 </html>
 
