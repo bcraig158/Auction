@@ -171,7 +171,22 @@ function updateBiddingHistory() {
 
 // Call updateBiddingHistory after ensuring DOM is fully loaded
 window.addEventListener('load', function () {
-    updateBiddingHistory();
+    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
+        .then(response => response.json())
+        .then(data => {
+            const highestBidFromServer = Math.max(...data.map(bid => bid.bid), 0);
+            highestBid = highestBidFromServer;
+
+            document.getElementById("bid").value = highestBid + 1000;
+            document.getElementById("bid").min = highestBid + 1000;
+
+            document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
+
+            updateBiddingHistory(data);
+        })
+        .catch(error => {
+            console.error("Error fetching bids:", error);
+        });
 });
 
 // Set up the message listener to receive bid data from the iframe
@@ -192,7 +207,14 @@ window.addEventListener("message", function(event) {
         document.querySelector('.bidding-history').scrollIntoView({ behavior: 'smooth' });
     }
     if (event.data.type === "bidSubmitted") {
-        updateBiddingHistory();
+        fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
+            .then(response => response.json())
+            .then(data => {
+                updateBiddingHistory(data);
+            })
+            .catch(error => {
+                console.error("Error updating bid history after submission:", error);
+            });
     }
 }, false);
 
