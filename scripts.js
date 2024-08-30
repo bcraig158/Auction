@@ -102,18 +102,22 @@ function updateBiddingHistory() {
         let content = "";
         let highestBidFromServer = 0;
 
-        bids.forEach(bid => {
-            content += `
-                <div class="bid-entry">
-                    <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
-                    <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
-                </div>
-            `;
-            highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
-        });
+        if (bids.length === 0) {
+            content = "<p>No bids available</p>";
+        } else {
+            bids.forEach(bid => {
+                content += `
+                    <div class="bid-entry">
+                        <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
+                        <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
+                    </div>
+                `;
+                highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
+            });
 
-        // Update the highest bid on the page
-        updateHighestBid(highestBidFromServer);
+            // Update the highest bid on the page
+            updateHighestBid(highestBidFromServer);
+        }
 
         if (document.getElementById("bids-text")) {
             document.getElementById("bids-text").innerHTML = content;
@@ -121,6 +125,7 @@ function updateBiddingHistory() {
     })
     .catch(error => {
         console.error("Error fetching bids:", error);
+        document.getElementById("bids-text").innerHTML = "<p>Error loading bids.</p>";
     });
 }
 
