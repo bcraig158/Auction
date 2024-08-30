@@ -63,7 +63,7 @@ iframe#bid-frame {
     margin-top: 15px;
     padding-top: 15px;
     padding-bottom: 15px;
-    text-align: center;
+    text-align: center; /* Center-align the text within this section */
     background-color: #f9f9f9;
 }
 
@@ -73,10 +73,11 @@ iframe#bid-frame {
     padding: 12px;
     margin-bottom: 12px;
     background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+    display: inline-block; /* Make each bid entry block-centered */
+    text-align: left; /* Ensure text inside each entry remains left-aligned */
+    width: 80%; /* Adjust the width to make it appear more centered and balanced */
+    max-width: 600px; /* Optionally set a max width */
+    box-sizing: border-box;
     transition: background-color 0.3s ease;
 }
 
@@ -84,17 +85,13 @@ iframe#bid-frame {
     background-color: #f1f1f1;
 }
 
-.bidding-history .bid-entry .bid-amount {
-    font-size: 18px;
+.bidding-history .bid-entry .bid-amount,
+.bidding-history .bid-entry .bid-time {
+    display: block;
+    margin: 0 auto; /* Center each text block within the entry */
+    font-size: 16px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 5px;
-}
-
-.bidding-history .bid-entry .bid-time {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 5px;
 }
 
 .bidding-history .bid-entry div {
@@ -116,4 +113,3 @@ button {
 button:hover {
     background-color: #0277BD;
 }
-
