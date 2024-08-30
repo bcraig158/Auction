@@ -21,11 +21,11 @@ const countdownTimer = setInterval(() => {
     }
 }, 1000);
 
-// Function to format the date
+// Function to format the date for display
 function formatDate(timestamp) {
     const date = new Date(timestamp);
     const options = {
-        month: 'short', 
+        month: 'short',
         day: 'numeric',
         hour: 'numeric',
         minute: 'numeric',
@@ -100,7 +100,6 @@ function updateIframeBidMin(newMinBid) {
 // Function to update the bidding history display
 function updateBiddingHistory(bids) {
     let content = "";
-    let highestBidFromServer = 0;
 
     if (bids.length === 0) {
         content = "<p>No bids available</p>";
@@ -112,11 +111,7 @@ function updateBiddingHistory(bids) {
                     <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
                 </div>
             `;
-            highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
         });
-
-        // Update the highest bid on the page
-        updateHighestBid(highestBidFromServer);
     }
 
     if (document.getElementById("bids-text")) {
@@ -177,6 +172,24 @@ window.addEventListener("message", function(event) {
             });
     }
 }, false);
+
+// Fetch and display the bid history when the page loads
+window.addEventListener('load', function () {
+    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch bids: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Fetched bids:", data); // Log fetched bids for debugging
+            updateBiddingHistory(data);
+        })
+        .catch(error => {
+            console.error("Error fetching bids:", error);
+        });
+});
 
 // Reveal the full bid data only after correct PIN is entered
 function revealData() {
