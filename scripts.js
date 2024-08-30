@@ -95,37 +95,50 @@ function updateIframeBidMin(newMinBid) {
 }
 
 // Function to update the bidding history display
-function updateBiddingHistory(bids) {
-    let content = "";
-    let highestBidFromServer = 0;
+function updateBiddingHistory() {
+    console.log("Fetching bid history..."); // Debugging statement
+    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
+        .then(response => response.json())
+        .then(bids => {
+            console.log("Bids received:", bids); // Debugging statement
 
-    if (bids.length === 0) {
-        content = "<p>No bids available</p>";
-    } else {
-        bids.forEach(bid => {
-            content += `
-                <div class="bid-entry">
-                    <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
-                    <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
-                </div>
-            `;
-            highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
+            let content = "";
+            let highestBidFromServer = 0;
+
+            if (bids.length === 0) {
+                content = "<p>No bids available</p>";
+            } else {
+                bids.forEach(bid => {
+                    content += `
+                        <div class="bid-entry">
+                            <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
+                            <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
+                        </div>
+                    `;
+                    highestBidFromServer = Math.max(highestBidFromServer, bid.bid);
+                });
+
+                // Update the highest bid on the page
+                updateHighestBid(highestBidFromServer);
+            }
+
+            if (document.getElementById("bids-text")) {
+                document.getElementById("bids-text").innerHTML = content;
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching bids:", error);
+            document.getElementById("bids-text").innerHTML = "<p>Error loading bids.</p>";
         });
-
-        // Update the highest bid on the page
-        updateHighestBid(highestBidFromServer);
-    }
-
-    if (document.getElementById("bids-text")) {
-        document.getElementById("bids-text").innerHTML = content;
-    }
 }
 
 // Call updateBiddingHistory after ensuring DOM is fully loaded
 window.addEventListener('load', function () {
+    console.log("Page loaded, fetching initial bid history..."); // Debugging statement
     fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
         .then(response => response.json())
         .then(data => {
+            console.log("Initial bids data:", data); // Debugging statement
             const highestBidFromServer = Math.max(...data.map(bid => bid.bid), 0);
             highestBid = highestBidFromServer;
 
@@ -136,7 +149,7 @@ window.addEventListener('load', function () {
             document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
 
             // Update the bidding history
-            updateBiddingHistory(data);
+            updateBiddingHistory();
         })
         .catch(error => {
             console.error("Error fetching bids:", error);
