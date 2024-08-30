@@ -98,26 +98,15 @@ function updateIframeBidMin(newMinBid) {
 }
 
 // Function to update the bidding history display
-function updateBiddingHistory(bids) {
-    let content = "";
+<div class="bidding-history">
+    <h2>Bidding History:</h2>
+    <pre id="bids-text">Enter the PIN to reveal the full bid details.</pre>
+    <blockquote>
+        <input type="password" id="admin-pin" placeholder="Enter 8-digit PIN" maxlength="8">
+        <button onclick="revealData()">Reveal Bids</button>
+    </blockquote>
+</div>
 
-    if (bids.length === 0) {
-        content = "<p>No bids available</p>";
-    } else {
-        bids.forEach(bid => {
-            content += `
-                <div class="bid-entry">
-                    <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
-                    <span class="bid-time">Time: ${formatDate(bid.timestamp)}</span>
-                </div>
-            `;
-        });
-    }
-
-    if (document.getElementById("bids-text")) {
-        document.getElementById("bids-text").innerHTML = content;
-    }
-}
 
 // Call updateBiddingHistory after ensuring DOM is fully loaded
 window.addEventListener('load', function () {
@@ -172,24 +161,6 @@ window.addEventListener("message", function(event) {
             });
     }
 }, false);
-
-// Fetch and display the bid history when the page loads
-window.addEventListener('load', function () {
-    fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to fetch bids: ${response.statusText}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Fetched bids:", data); // Log fetched bids for debugging
-            updateBiddingHistory(data);
-        })
-        .catch(error => {
-            console.error("Error fetching bids:", error);
-        });
-});
 
 // Reveal the full bid data only after correct PIN is entered
 function revealData() {
