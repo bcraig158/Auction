@@ -84,7 +84,7 @@ function saveBid(event) {
 // Function to update the highest bid and notify the iframe
 function updateHighestBid(newBid) {
     highestBid = newBid;
-    document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
+    document.getElementById("current-bid").innerText = highestBid.toLocaleString();
     updateIframeBidMin(highestBid + 1000);
 
     document.getElementById("bid").value = highestBid + 1000;
