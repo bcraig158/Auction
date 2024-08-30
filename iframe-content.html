@@ -8,17 +8,25 @@
             font-family: Arial, sans-serif;
             padding: 20px;
         }
-        .form-container {
+        .form-container, .submission-banner {
             border: 3px solid black;
             border-radius: 10px;
             padding: 20px;
             max-width: 400px;
             margin: auto;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-container {
+            background-color: #f4f4f4;
         }
         form {
             display: flex;
             flex-direction: column;
+            width: 100%;
         }
         label {
             margin-bottom: 5px;
@@ -27,6 +35,7 @@
             margin-bottom: 15px;
             padding: 10px;
             font-size: 16px;
+            width: 100%;
         }
         button {
             cursor: pointer;
@@ -34,29 +43,32 @@
             color: white;
             border: none;
             border-radius: 5px;
+            transition: background-color 0.3s;
         }
-        .banner {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 128, 0, 0.9);
+        button:hover {
+            background-color: #45a049;
+        }
+        .submission-banner {
+            background-color: #4CAF50;
             color: white;
+            display: none;
             text-align: center;
-            padding-top: 60px;
-            font-size: 24px;
-            border-radius: 10px;
+            flex-direction: column;
+            padding: 30px;
             cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .submission-banner h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .submission-banner p {
+            margin-top: 0;
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <div class="banner" id="congrats-banner">
-            Congrats your bid was submitted sucka! <br> Click here to submit another bid.
-        </div>
+    <div class="form-container" id="form-container">
         <form id="bid-form" onsubmit="submitBid(event)">
             <label for="name">First & Last Name:</label>
             <input type="text" id="name" name="name" required>
@@ -74,6 +86,11 @@
         </form>
     </div>
 
+    <div class="submission-banner" id="submission-banner" onclick="resetForm()">
+        <h2>Congrats your bid was submitted sucka!</h2>
+        <p>Click here to submit another bid.</p>
+    </div>
+
     <script>
     function submitBid(event) {
         event.preventDefault();
@@ -85,15 +102,13 @@
             bid: parseInt(document.getElementById("bid").value)
         };
 
-        console.log("Submitting bid:", bidData); // Debugging statement
+        console.log("Submitting bid:", bidData);
 
-        // Validate bid amount before storing and sending
         if (bidData.bid < parseInt(document.getElementById("bid").min)) {
             alert(`Your bid must be at least $${document.getElementById("bid").min}.`);
             return;
         }
 
-        // Fetch the current highest bid from the server before submission
         fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
             .then(response => response.json())
             .then(data => {
@@ -104,7 +119,6 @@
                     return;
                 }
 
-                // Send the bid data to the API for persistent storage
                 return fetch("https://sprouterbidapi.glitch.me/submit-bid", {
                     method: "POST",
                     headers: {
@@ -120,52 +134,47 @@
                 return response.json();
             })
             .then(data => {
-                console.log("Bid submission response:", data); // Debugging statement
+                console.log("Bid submission response:", data);
+                alert(data.message);
 
-                // Display the congratulatory banner
-                document.getElementById("congrats-banner").style.display = 'block';
-                document.getElementById("bid-form").style.display = 'none';
+                document.getElementById("bid-form").reset();
 
-                // Notify the parent window to update the bidding history
                 window.parent.postMessage({ type: "bidSubmitted" }, "*");
-
-                // Scroll to the bid history (optional)
                 window.parent.postMessage({ type: "scrollToHistory" }, "*");
+
+                // Show the submission banner
+                document.getElementById("form-container").style.display = "none";
+                document.getElementById("submission-banner").style.display = "flex";
             })
             .catch(error => {
-                console.error("Error:", error); // Log the error to the console
+                console.error("Error:", error);
                 alert("There was an error submitting your bid. Please try again later.");
             });
     }
 
-    // Hide the banner and show the form when the banner is clicked
-    document.getElementById("congrats-banner").addEventListener('click', function() {
-        this.style.display = 'none';
-        document.getElementById("bid-form").style.display = 'block';
-    });
+    function resetForm() {
+        document.getElementById("form-container").style.display = "flex";
+        document.getElementById("submission-banner").style.display = "none";
+    }
 
-    // Listen for messages from the parent window to update the minimum bid
     window.addEventListener("message", function(event) {
         const allowedOrigins = ["https://bcraig158.github.io", "https://sprouter.app", "https://spro.me", "https://spro.biz", "https://spro.vip"];
         
         if (!allowedOrigins.includes(event.origin)) {
-            console.warn("Origin not allowed: " + event.origin); // Add warning if the origin is not allowed
+            console.warn("Origin not allowed: " + event.origin);
             return;
         }
 
         if (event.data.type === "updateBids") {
-            // Display the received bid data in the parent page
             const bids = event.data.bids;
-            displayBids(bids); // Implement a function to display the bids in the parent page
+            displayBids(bids);
         }
 
         if (event.data.type === "iframeLoaded") {
-            // Request bid data from the iframe
             document.querySelector("iframe").contentWindow.postMessage({ type: "requestBids" }, event.origin);
         }
     }, false);
 
-    // Notify the parent window that the iframe has loaded
     window.addEventListener("load", function() {
         const allowedOrigins = ["https://sprouter.app", "https://spro.me", "https://spro.biz", "https://spro.vip"];
         
@@ -173,14 +182,13 @@
             try {
                 window.parent.postMessage({ type: "iframeLoaded" }, origin);
             } catch (error) {
-                console.error("Failed to communicate with parent:", error); // Handle communication errors
+                console.error("Failed to communicate with parent:", error);
             }
         });
         
-        updateParentWithBidData(); // Send the initial bid data to the parent
+        updateParentWithBidData();
     });
 
-    // Function to send bid data to the parent
     function updateParentWithBidData() {
         fetch("https://sprouterbidapi.glitch.me/retrieve-bids")
         .then(response => response.json())
@@ -190,12 +198,12 @@
                 try {
                     window.parent.postMessage({ type: "updateBids", bids: data }, origin);
                 } catch (error) {
-                    console.error("Failed to send bid data to parent:", error); // Handle postMessage errors
+                    console.error("Failed to send bid data to parent:", error);
                 }
             });
         })
         .catch(error => {
-            console.error("Error fetching bids:", error); // Log any errors encountered while fetching bids
+            console.error("Error fetching bids:", error);
         });
     }
     </script>
