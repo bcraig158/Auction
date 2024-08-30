@@ -51,34 +51,34 @@ function saveBid(event) {
     };
 
     fetch("https://sprouterbidapi.glitch.me/submit-bid", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(bidData)
-})
-.then(response => {
-  if (!response.ok) {
-    throw new Error(`Error submitting bid: ${response.statusText}`);
-  }
-  return response.json();
-})
-.then(data => {
-  console.log("Bid submission response:", data);
-  return fetch("https://sprouterbidapi.glitch.me/retrieve-bids"); // Fetch the updated bids
-})
-.then(response => {
-  if (!response.ok) {
-    throw new Error(`Failed to fetch updated bids: ${response.statusText}`);
-  }
-  return response.json();
-})
-.then(data => {
-  updateBiddingHistory(data); // Update the bidding history with the new data
-})
-.catch(error => {
-  console.error("Error submitting bid:", error);
-});
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(bidData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error submitting bid: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Bid submission response:", data);
+        return fetch("https://sprouterbidapi.glitch.me/retrieve-bids"); // Fetch the updated bids
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Failed to fetch updated bids: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        updateBiddingHistory(data); // Update the bidding history with the new data
+    })
+    .catch(error => {
+        console.error("Error submitting bid:", error);
+    });
 }
 
 // Function to update the highest bid and notify the iframe
@@ -98,15 +98,32 @@ function updateIframeBidMin(newMinBid) {
 }
 
 // Function to update the bidding history display
-<div class="bidding-history">
-    <h2>Bidding History:</h2>
-    <pre id="bids-text">Enter the PIN to reveal the full bid details.</pre>
-    <blockquote>
-        <input type="password" id="admin-pin" placeholder="Enter 8-digit PIN" maxlength="8">
-        <button onclick="revealData()">Reveal Bids</button>
-    </blockquote>
-</div>
+function updateBiddingHistory(bids) {
+    let content = "";
 
+    if (bids.length === 0) {
+        content = "<p>No bids available</p>";
+    } else {
+        bids.forEach(bid => {
+            content += `
+                <div class="bid-entry">
+                    <span class="bid-amount">Bid: $${bid.bid.toLocaleString()}</span>
+                    <span class="bid-time">Time: ${new Date(bid.timestamp).toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true
+                    })}</span>
+                </div>
+            `;
+        });
+    }
+
+    if (document.getElementById("bids-text")) {
+        document.getElementById("bids-text").innerHTML = content;
+    }
+}
 
 // Call updateBiddingHistory after ensuring DOM is fully loaded
 window.addEventListener('load', function () {
@@ -210,7 +227,7 @@ function initializeHighestBid() {
             document.getElementById("current-bid").innerText = `$${highestBid.toLocaleString()}`;
         }
         updateIframeBidMin(highestBid + 1000);
-        updateBiddingHistory();
+        updateBiddingHistory(bids);
     })
     .catch(error => {
         console.error("Error initializing highest bid:", error);
@@ -219,3 +236,4 @@ function initializeHighestBid() {
 
 // Initialize the highest bid and bidding history when the page loads
 initializeHighestBid();
+
