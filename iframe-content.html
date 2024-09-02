@@ -9,23 +9,30 @@
             padding: 20px;
             margin: 0;
             box-sizing: border-box;
+            background-color: #f4f4f4;
         }
+
         .form-container {
-            border: 3px solid black;
+            border: 3px solid #007BFF; /* Deep blue border */
             border-radius: 10px;
             padding: 20px;
             max-width: 400px;
             width: 100%;
             margin: auto;
+            background-color: #fff; /* White background */
         }
+
         form {
             display: flex;
             flex-direction: column;
             width: 100%;
         }
+
         label {
             margin-bottom: 5px;
+            color: #333; /* Dark color for text */
         }
+
         input, button {
             margin-bottom: 15px;
             padding: 10px;
@@ -34,17 +41,29 @@
             margin: 0 auto 15px auto;
             box-sizing: border-box;
         }
+
+        input {
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+
         button {
             cursor: pointer;
-            background-color: #4CAF50;
+            background-color: #FF5733; /* Bright orange for CTA button */
             color: white;
             border: none;
             border-radius: 5px;
             width: 100%;
+            transition: background-color 0.3s ease;
         }
+
+        button:hover {
+            background-color: #C70039; /* Darker red on hover */
+        }
+
         .success-banner {
             display: none;
-            background-color: #28a745;
+            background-color: #28a745; /* Green background for success */
             color: white;
             padding: 20px;
             text-align: center;
@@ -55,6 +74,7 @@
             max-width: 100%;
             width: 100%;
         }
+
         .success-banner.active {
             display: block;
         }
@@ -200,6 +220,7 @@
     </script>
 </body>
 </html>
+
 
 
 
