@@ -14,10 +14,9 @@ header {
     color: #fff;
     padding: 20px;
     text-align: center;
-    font-size: 24px;
+    font-size: 28px; /* Increased font size */
     font-weight: bold;
     text-transform: uppercase;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
 }
 
 /* Auction Info */
@@ -30,50 +29,62 @@ header {
     border-radius: 12px;
     margin: 20px auto;
     max-width: 90%;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Stronger shadow for card effect */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
     flex-wrap: wrap;
 }
 
 .auction-info div {
     text-align: center;
-    font-size: 20px;
+    font-size: 22px; /* Larger font for emphasis */
     background-color: #3c4b6f; /* Complementary blue */
     padding: 20px;
     border-radius: 12px;
     margin: 10px;
     width: 45%;
     box-sizing: border-box;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Individual card shadows */
+    font-weight: bold;
 }
 
 #countdown {
-    color: #f04e4e; /* Red for urgency */
+    color: #ff4500; /* Bright red for urgency */
     font-weight: bold;
-    font-size: 24px;
-    animation: pulse 1s infinite; /* Pulsing animation for urgency */
+    font-size: 28px; /* Increased font size for visibility */
+    animation: pulse 1s infinite; /* Subtle pulsing effect */
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 
 #current-bid {
-    color: #39a56d; /* Green for success */
+    color: #39a56d; /* Bright green for success */
     font-weight: bold;
-    font-size: 24px;
+    font-size: 28px; /* Increased font size for visibility */
+    animation: bounce 2s infinite; /* Bounce effect to grab attention */
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
 }
 
 /* Auction Description */
 .auction-description {
     background-color: white;
-    padding: 20px;
+    padding: 15px;
     border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     max-width: 90%;
     margin: 20px auto;
     text-align: center;
-    border-left: 5px solid #39a56d; /* Green accent border */
 }
 
 .auction-description p {
     color: #2d2d2d;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .auction-description strong {
@@ -83,34 +94,27 @@ header {
 /* Form Container */
 .form-container {
     background-color: #fff;
-    padding: 25px;
+    padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     margin: 20px auto;
     border: 3px solid #39a56d; /* Green border to make form stand out */
-    animation: fadeIn 1s ease-in-out; /* Smooth fade-in animation */
 }
 
 /* Input Fields */
 input, button {
-    margin-bottom: 20px;
-    padding: 12px;
+    margin-bottom: 15px;
+    padding: 10px;
     font-size: 16px;
     width: calc(100% - 24px);
-    margin: 0 auto 20px auto;
+    margin: 0 auto 15px auto;
     box-sizing: border-box;
 }
 
 input {
-    border: 2px solid #007BFF; /* Blue input border */
+    border: 2px solid #007BFF;
     border-radius: 5px;
-}
-
-input:focus {
-    border-color: #39a56d; /* Green border on focus */
-    outline: none;
-    box-shadow: 0 0 8px rgba(57, 165, 109, 0.4); /* Glow effect on focus */
 }
 
 /* Buttons */
@@ -118,50 +122,43 @@ button {
     background-color: #39a56d; /* Green for success */
     color: #fff;
     border: none;
-    padding: 14px 24px;
+    padding: 12px 20px;
     font-size: 16px;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
     width: 100%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Button shadow for depth */
 }
 
 button:hover {
     background-color: #2e8b57; /* Darker green on hover */
-    transform: translateY(-3px); /* Slight lift effect on hover */
-}
-
-button:active {
-    transform: translateY(1px); /* Subtle push effect on click */
+    transform: translateY(-3px);
 }
 
 /* Bidding History */
 .bidding-history {
-    padding: 30px;
+    padding: 25px;
     background-color: #ffffff;
     border-radius: 12px;
     text-align: center;
     max-width: 90%;
     margin: 20px auto;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    border-left: 5px solid #202a44; /* Dark navy accent border */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .bidding-history h2 {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     color: #202a44;
-    text-transform: uppercase; /* Consistent with header style */
 }
 
 .bidding-history .bid-entry {
     border: 1px solid #ccc;
     border-radius: 12px;
-    padding: 20px;
-    margin: 20px auto;
+    padding: 15px;
+    margin: 15px 0;
     background-color: #f9f9f9;
     text-align: left;
     max-width: 800px;
@@ -187,16 +184,13 @@ button:active {
 
 /* Reveal PIN Section */
 blockquote {
-    padding: 15px;
+    padding: 10px;
     border-left: 5px solid #39a56d;
-    margin: 25px 0;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
 }
 
 blockquote input {
-    padding: 12px;
+    padding: 10px;
     border: 2px solid #007BFF;
     border-radius: 5px;
     width: calc(100% - 24px);
@@ -207,23 +201,18 @@ blockquote button {
     background-color: #f04e4e; /* Red button for revealing bids */
     color: #fff;
     border: none;
-    padding: 14px 24px;
+    padding: 10px 20px;
     font-size: 16px;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
     width: 100%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Button shadow for depth */
 }
 
 blockquote button:hover {
     background-color: #c0392b; /* Darker red on hover */
-    transform: translateY(-3px); /* Slight lift effect on hover */
-}
-
-blockquote button:active {
-    transform: translateY(1px); /* Subtle push effect on click */
+    transform: translateY(-3px);
 }
 
 /* Success Banner */
@@ -239,24 +228,38 @@ blockquote button:active {
     margin: auto;
     max-width: 100%;
     width: 100%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Depth for success banner */
-    animation: fadeIn 1s ease-in-out; /* Smooth fade-in animation */
 }
 
 .success-banner.active {
     display: block;
 }
 
-/* Animations */
+/* Custom Animations */
 @keyframes pulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    50% { transform: scale(1.1); }
     100% { transform: scale(1); }
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+/* Additional Styles for Visual Appeal */
+.auction-info div:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.bidding-history .bid-entry:hover .bid-amount {
+    color: #ff4500; /* Change color on hover for added emphasis */
+}
+
+blockquote input:focus, input:focus {
+    border-color: #39a56d; /* Focus effect on inputs */
+    box-shadow: 0 0 5px rgba(57, 165, 109, 0.5);
 }
 
 
