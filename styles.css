@@ -61,7 +61,7 @@ header {
 #current-bid {
     color: #39a56d; /* Bright green for success */
     font-weight: bold;
-    font-size: 28px; /* Increased font size for visibility */
+    font-size: 38px; /* Increased font size for visibility */
     animation: bounce 2s infinite; /* Bounce effect to grab attention */
 }
 
