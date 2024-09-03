@@ -8,7 +8,7 @@ body {
 }
 
 header {
-    background-color: #222;
+    background-color: #003366; /* Updated to deep blue for trust and reliability */
     color: white;
     padding: 15px;
     text-align: center;
@@ -28,20 +28,31 @@ header {
 .auction-info div {
     text-align: center;
     font-size: 16px;
-    background-color: #607D8B;
+    background-color: #004080; /* Slightly lighter blue to maintain consistency */
     padding: 15px;
     margin: 10px 0;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     width: 45%;
     box-sizing: border-box;
+    color: white;
 }
 
-.auction-info div span {
-    display: inline-block;
-    font-size: 20px;
+#countdown {
+    color: #ff4500; /* Red or orange for urgency */
     font-weight: bold;
-    margin-top: 10px;
+    font-size: 20px;
+    animation: pulse 1s infinite; /* Subtle pulsing effect */
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+#current-bid {
+    color: #32cd32; /* Green for stability and wealth */
 }
 
 .auction-description, .bidding-history {
@@ -53,6 +64,19 @@ header {
     overflow-y: auto;
     max-height: 100%;
     text-align: center;
+}
+
+.auction-description {
+    background-color: white;
+    border: 3px solid #ffeb3b; /* Light yellow border for optimism */
+}
+
+.auction-description p {
+    color: #333;
+}
+
+.auction-description strong {
+    color: #003366; /* Dark blue for emphasized text */
 }
 
 iframe#bid-frame {
@@ -98,7 +122,6 @@ iframe#bid-frame {
     text-align: center; /* Center the text inside each bid entry */
 }
 
-
 .bidding-history .bid-entry div {
     font-size: 14px;
     color: #444;
@@ -106,7 +129,7 @@ iframe#bid-frame {
 }
 
 button {
-    background-color: #0288D1;
+    background-color: #ff4500; /* Bright red/orange for urgency */
     color: white;
     border: none;
     padding: 10px 20px;
@@ -117,5 +140,5 @@ button {
 }
 
 button:hover {
-    background-color: #0277BD;
+    background-color: #e63946; /* Slightly darker red for hover effect */
 }
