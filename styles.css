@@ -131,6 +131,12 @@ input {
     border-radius: 5px;
 }
 
+input:focus {
+    outline: none; /* Remove default outline */
+    border-color: #39a56d; /* Focus effect for inputs */
+    box-shadow: 0 0 5px rgba(57, 165, 109, 0.5);
+}
+
 /* Buttons */
 button {
     background-color: #39a56d; /* Green for success */
@@ -248,19 +254,6 @@ blockquote button:hover {
     display: block;
 }
 
-/* Custom Animations */
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-    60% { transform: translateY(-5px); }
-}
-
 /* Additional Styles for Visual Appeal */
 .auction-info div:hover {
     transform: translateY(-3px);
@@ -270,11 +263,5 @@ blockquote button:hover {
 .bidding-history .bid-entry:hover .bid-amount {
     color: #ff4500; /* Change color on hover for added emphasis */
 }
-
-blockquote input:focus, input:focus {
-    border-color: #39a56d; /* Focus effect on inputs */
-    box-shadow: 0 0 5px rgba(57, 165, 109, 0.5);
-}
-
 
 
