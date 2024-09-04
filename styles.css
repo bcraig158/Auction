@@ -23,14 +23,15 @@ header {
 .auction-info {
     display: flex;
     justify-content: space-around;
-    padding: 15px;
+    padding: 20px; /* Added padding for more spacing */
     background-color: #2a3d5f; /* Deep blue */
     color: #fff;
     border-radius: 12px;
     margin: 20px auto;
     max-width: 90%;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow effect */
     flex-wrap: wrap;
+    border: 2px solid #202a44; /* Add border to make it more defined */
 }
 
 .auction-info div {
@@ -47,28 +48,30 @@ header {
 
 #countdown {
     color: #ff4500; /* Bright red for urgency */
-    font-weight: bold;
-    font-size: 28px; /* Increased font size for visibility */
+    font-weight: 900; /* Increased boldness */
+    font-size: 36px; /* Larger font size */
     animation: pulse 1s infinite; /* Subtle pulsing effect */
+    padding: 10px; /* Added padding to make it stand out */
 }
 
 @keyframes pulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    50% { transform: scale(1.1); } /* Slightly increased scale for more visibility */
     100% { transform: scale(1); }
 }
 
 #current-bid {
     color: #39a56d; /* Bright green for success */
-    font-weight: bold;
-    font-size: 38px; /* Increased font size for visibility */
+    font-weight: 900; /* Increased boldness */
+    font-size: 36px; /* Larger font size */
     animation: bounce 2s infinite; /* Bounce effect to grab attention */
+    padding: 10px; /* Added padding to make it stand out */
 }
 
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-    60% { transform: translateY(-5px); }
+    40% { transform: translateY(-15px); } /* Increased bounce for more emphasis */
+    60% { transform: translateY(-8px); } /* Deeper bounce */
 }
 
 /* Auction Description */
