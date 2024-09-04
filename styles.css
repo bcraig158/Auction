@@ -76,18 +76,29 @@ header {
 
 /* Auction Description */
 .auction-description {
-    background-color: white;
-    padding: 15px;
+    background-color: #fff;
+    padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Deeper shadow for card style */
     max-width: 90%;
     margin: 20px auto;
     text-align: center;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transition for hover effects */
+    border: 1px solid #e0e0e0; /* Light border for a defined card */
 }
 
-.auction-description p {
-    color: #2d2d2d;
-    margin-bottom: 10px;
+/* Interactive Hover Effects */
+.auction-description:hover {
+    background-color: #f0f8ff; /* Light shading on hover */
+    transform: translateY(-5px); /* Slight lift effect on hover */
+}
+
+/* Style for the icons within the Auction Description */
+.auction-description i {
+    margin-right: 8px;
+    color: #2a3d5f; /* Icon color to match the theme */
+    font-size: 20px;
+    vertical-align: middle;
 }
 
 .auction-description strong {
